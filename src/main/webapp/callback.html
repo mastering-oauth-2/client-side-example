@@ -17,12 +17,23 @@
           for (var i = 0; i < responseProperties.length; i++) {
             if (responseProperties[i].indexOf("access_token=") === 0) {
               accessToken = responseProperties[i].split("=")[1];
-              $("#response").html("Access token: " + accessToken);
               break;
             }
           }
 
-          // TODO: Request profile and feed data with access token
+          // Request profile data with access token
+          $.ajax({ type: "POST",
+            url: "https://graph.facebook.com/v2.5/me?fields=name",
+            headers: {"Content-Type": "application/x-www-form-urlencoded"},
+            data: {
+              access_token: encodeURIComponent(accessToken),
+              method: "get"
+            },
+            contentType: "application/x-www-form-urlencoded",
+            success: function(data) {
+              $("#response").html("Hello, " + data.name + "!");
+            }
+          });
 
         } else {
           $("#response").html("No response detected.");
